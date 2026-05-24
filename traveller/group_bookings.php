@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_group'])) {
         $join_error = "You have already joined this group!";
     } else {
         // Check if group has capacity
-        $group_stmt = $pdo->prepare("SELECT current_capacity, max_capacity, status FROM group_booking WHERE group_booking_ID = ?");
+        $group_stmt = $pdo->prepare("SELECT current_capacity, max_capacity, status, package_ID, agency_ID, destination, price_per_person, departure_date, return_date FROM group_booking WHERE group_booking_ID = ? AND traveler_ID IS NULL");
         $group_stmt->execute([$group_id]);
         $group = $group_stmt->fetch();
         
@@ -33,40 +33,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_group'])) {
             $join_error = "This group has reached its maximum capacity!";
         } else {
             // Insert new row for this traveler joining the group
-            // First, get the original group details
-            $orig_stmt = $pdo->prepare("SELECT package_ID, agency_ID, destination, price_per_person, max_capacity, departure_date, return_date, description FROM group_booking WHERE group_booking_ID = ? AND traveler_ID IS NOT NULL LIMIT 1");
-            $orig_stmt->execute([$group_id]);
-            $original = $orig_stmt->fetch();
+            $insert_stmt = $pdo->prepare("
+                INSERT INTO group_booking (package_ID, agency_ID, traveler_ID, destination, status, price_per_person, max_capacity, current_capacity, departure_date, return_date, booking_date, payment_status) 
+                VALUES (?, ?, ?, ?, 'Open', ?, ?, 1, ?, ?, CURDATE(), 'Pending')
+            ");
+            $insert_stmt->execute([
+                $group['package_ID'], 
+                $group['agency_ID'], 
+                $traveler_id, 
+                $group['destination'],
+                $group['price_per_person'],
+                $group['max_capacity'],
+                $group['departure_date'],
+                $group['return_date']
+            ]);
             
-            if ($original) {
-                // Insert new booking for this traveler
-                $insert_stmt = $pdo->prepare("
-                    INSERT INTO group_booking (package_ID, agency_ID, traveler_ID, destination, status, price_per_person, max_capacity, current_capacity, departure_date, return_date, booking_date, payment_status, description) 
-                    VALUES (?, ?, ?, ?, 'Open', ?, ?, 1, ?, ?, CURDATE(), 'Pending', ?)
-                ");
-                $insert_stmt->execute([
-                    $original['package_ID'], 
-                    $original['agency_ID'], 
-                    $traveler_id, 
-                    $original['destination'],
-                    $original['price_per_person'],
-                    $original['max_capacity'],
-                    $original['departure_date'],
-                    $original['return_date'],
-                    $original['description']
-                ]);
-                
-                // Update the current capacity of the original group (or you can track differently)
-                $update_stmt = $pdo->prepare("
-                    UPDATE group_booking SET current_capacity = current_capacity + 1 
-                    WHERE group_booking_ID = ?
-                ");
-                $update_stmt->execute([$group_id]);
-                
-                $join_success = "You have successfully joined the group!";
-            } else {
-                $join_error = "Group details not found.";
-            }
+            // Update the current capacity of the master group
+            $update_stmt = $pdo->prepare("
+                UPDATE group_booking SET current_capacity = current_capacity + 1 
+                WHERE group_booking_ID = ?
+            ");
+            $update_stmt->execute([$group_id]);
+            
+            $join_success = "You have successfully joined the group!";
         }
     }
 }
@@ -75,33 +64,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_group'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['leave_group'])) {
     $group_id = (int)$_POST['group_id'];
     
+    // Get the master group ID
+    $master_stmt = $pdo->prepare("SELECT group_booking_ID FROM group_booking WHERE package_ID = (SELECT package_ID FROM group_booking WHERE group_booking_ID = ?) AND traveler_ID IS NULL");
+    $master_stmt->execute([$group_id]);
+    $master = $master_stmt->fetch();
+    
+    // Delete the traveler's booking
     $delete_stmt = $pdo->prepare("DELETE FROM group_booking WHERE group_booking_ID = ? AND traveler_ID = ? AND payment_status != 'Paid'");
     if ($delete_stmt->execute([$group_id, $traveler_id])) {
-        // Update capacity
-        $update_stmt = $pdo->prepare("
-            UPDATE group_booking SET current_capacity = current_capacity - 1 
-            WHERE group_booking_ID = ?
-        ");
-        $update_stmt->execute([$group_id]);
+        // Update master group capacity
+        if ($master) {
+            $update_stmt = $pdo->prepare("UPDATE group_booking SET current_capacity = current_capacity - 1 WHERE group_booking_ID = ?");
+            $update_stmt->execute([$master['group_booking_ID']]);
+        }
         $join_success = "You have left the group.";
     } else {
         $join_error = "Failed to leave group. You may have already paid.";
     }
 }
 
-// Get available group trips (groups that are not full)
+// Get available group trips (only master groups where traveler_ID is NULL)
 $available_groups = $pdo->prepare("
-    SELECT g.group_booking_ID, g.package_ID, g.agency_ID, g.destination, 
-           g.status, g.price_per_person, g.max_capacity, g.current_capacity, 
-           g.departure_date, g.return_date, g.description,
-           tp.package_name, f.country, tp.duration
+    SELECT g.*, tp.package_name, f.country, tp.duration as package_duration
     FROM group_booking g
     JOIN travel_package tp ON g.package_ID = tp.package_ID
     LEFT JOIN flight f ON tp.flight_ID = f.flight_ID
     WHERE g.status IN ('Open')
     AND g.departure_date >= CURDATE()
     AND g.current_capacity < g.max_capacity
-    GROUP BY g.group_booking_ID
+    AND g.traveler_ID IS NULL
     ORDER BY g.departure_date ASC
 ");
 $available_groups->execute();
@@ -109,7 +100,7 @@ $groups = $available_groups->fetchAll();
 
 // Get traveller's joined groups
 $my_groups = $pdo->prepare("
-    SELECT g.*, tp.package_name, f.country, tp.duration
+    SELECT g.*, tp.package_name, f.country, tp.duration as package_duration
     FROM group_booking g
     JOIN travel_package tp ON g.package_ID = tp.package_ID
     LEFT JOIN flight f ON tp.flight_ID = f.flight_ID
@@ -234,6 +225,19 @@ $total_joined = $stmt->fetchColumn();
             color: rgba(255,255,255,0.5);
             margin-bottom: 15px;
         }
+        .capacity-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .capacity-fill {
+            height: 100%;
+            background: #d88d14;
+            border-radius: 3px;
+        }
         .btn-join, .btn-leave {
             padding: 10px 20px;
             border-radius: 25px;
@@ -346,6 +350,7 @@ $total_joined = $stmt->fetchColumn();
                 <?php foreach ($groups as $group): 
                     $spots_taken = $group['current_capacity'];
                     $spots_left = $group['max_capacity'] - $spots_taken;
+                    $percentage = ($group['max_capacity'] > 0) ? ($spots_taken / $group['max_capacity']) * 100 : 0;
                 ?>
                     <div class="group-card">
                         <div class="group-header">
@@ -363,12 +368,15 @@ $total_joined = $stmt->fetchColumn();
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">⏱️ Duration</span>
-                                <span class="detail-value"><?= htmlspecialchars($group['duration']) ?> days</span>
+                                <span class="detail-value"><?= htmlspecialchars($group['package_duration']) ?> days</span>
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">👥 Group Size</span>
                                 <span class="detail-value"><?= $spots_taken ?> / <?= $group['max_capacity'] ?> travellers</span>
                             </div>
+                        </div>
+                        <div class="capacity-bar">
+                            <div class="capacity-fill" style="width: <?= $percentage ?>%;"></div>
                         </div>
                         <div class="spots-info"><?= $spots_left ?> spots remaining</div>
                         <div class="price">R <?= number_format($group['price_per_person']) ?> <span style="font-size: 0.8rem;">per person</span></div>
@@ -397,7 +405,7 @@ $total_joined = $stmt->fetchColumn();
                     <div class="group-card">
                         <div class="group-header">
                             <h3><?= htmlspecialchars($group['package_name']) ?></h3>
-                            <span class="badge-pending"><?= $group['payment_status'] ?></span>
+                            <span class="badge-pending"><?= $group['payment_status'] ?? 'Pending' ?></span>
                         </div>
                         <div class="group-details">
                             <div class="detail-row">
@@ -415,7 +423,7 @@ $total_joined = $stmt->fetchColumn();
                         </div>
                         <div class="price">R <?= number_format($group['price_per_person']) ?> <span style="font-size: 0.8rem;">total</span></div>
                         
-                        <?php if ($group['departure_date'] > date('Y-m-d') && $group['payment_status'] !== 'Paid'): ?>
+                        <?php if ($group['departure_date'] > date('Y-m-d') && ($group['payment_status'] ?? 'Pending') !== 'Paid'): ?>
                             <form method="POST" onsubmit="return confirm('Are you sure you want to leave this group?');">
                                 <input type="hidden" name="group_id" value="<?= $group['group_booking_ID'] ?>">
                                 <button type="submit" name="leave_group" class="btn-leave">🚪 Leave Group</button>
