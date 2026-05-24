@@ -17,13 +17,14 @@ $grp = [
     'traveler_ID'      => null, 
     'destination'      => '',
     'status'           => 'Open',
-    'price'            => '',
+    'price_per_person' => '',
     'max_capacity'     => '',
     'current_capacity' => 0,
+    'departure_date'   => '',
 ];
 
 if ($is_edit) {
-    $stmt = $pdo->prepare('SELECT * FROM Group_Booking WHERE group_booking_ID = ? AND agency_ID = ?');
+    $stmt = $pdo->prepare('SELECT * FROM group_booking WHERE group_booking_ID = ? AND agency_ID = ?');
     $stmt->execute([$group_id, $agency_id]);
     $grp = $stmt->fetch();
     if (!$grp) { 
@@ -32,7 +33,8 @@ if ($is_edit) {
     }
 }
 
-$packages = $pdo->prepare('SELECT tp.package_ID, f.country AS dest FROM Travel_package tp LEFT JOIN Flight f ON tp.flight_ID = f.flight_ID WHERE tp.agency_ID = ?');
+// Fix: Use lowercase table names
+$packages = $pdo->prepare('SELECT package_ID, package_name FROM travel_package WHERE agency_ID = ?');
 $packages->execute([$agency_id]);
 $package_list = $packages->fetchAll();
 
@@ -43,19 +45,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price            = (float)$_POST['price'];
     $max_capacity     = (int)$_POST['max_capacity'];
     $current_capacity = (int)$_POST['current_capacity'];
+    $departure_date   = $_POST['duration'] ?? '';
 
     if (empty($destination)) $errors[] = "Destination name cannot be blank.";
     if ($max_capacity <= 0) $errors[] = "Max capacity must be greater than 0.";
     if ($price <= 0) $errors[] = "Price must be greater than 0.";
+    if (empty($departure_date)) $errors[] = "Departure date is required.";
 
     if (empty($errors)) {
         if ($is_edit) {
-            $stmt = $pdo->prepare('UPDATE Group_Booking SET package_ID = ?, destination = ?, status = ?, price = ?, max_capacity = ?, current_capacity = ? WHERE group_booking_ID = ? AND agency_ID = ?');
-            $stmt->execute([$package_id, $destination, $status, $price, $max_capacity, $current_capacity, $group_id, $agency_id]);
+            $stmt = $pdo->prepare('UPDATE group_booking SET package_ID = ?, destination = ?, status = ?, price_per_person = ?, max_capacity = ?, current_capacity = ?, departure_date = ? WHERE group_booking_ID = ? AND agency_ID = ?');
+            $stmt->execute([$package_id, $destination, $status, $price, $max_capacity, $current_capacity, $departure_date, $group_id, $agency_id]);
         } else {
-            // Explicitly set traveler_ID to NULL
-            $stmt = $pdo->prepare('INSERT INTO Group_Booking (package_ID, agency_ID, traveler_ID, destination, status, price, max_capacity, current_capacity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-            $stmt->execute([$package_id, $agency_id, null, $destination, $status, $price, $max_capacity, $current_capacity]);
+            // Create new group booking - all required fields included
+            $stmt = $pdo->prepare('INSERT INTO group_booking (package_ID, agency_ID, traveler_ID, destination, status, price_per_person, max_capacity, current_capacity, departure_date, booking_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE())');
+            $stmt->execute([$package_id, $agency_id, null, $destination, $status, $price, $max_capacity, $current_capacity, $departure_date]);
         }
         header('Location: /tripistry/agency/dashboard.php?msg=Group+trip+saved');
         exit;
@@ -93,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <option value="">— Select a Package —</option>
         <?php foreach ($package_list as $p): ?>
           <option value="<?= $p['package_ID'] ?>" <?= $grp['package_ID'] == $p['package_ID'] ? 'selected' : '' ?>>
-             Package #<?= $p['package_ID'] ?> (To: <?= htmlspecialchars($p['dest'] ?? 'Unspecified') ?>)
+             Package #<?= $p['package_ID'] ?> - <?= htmlspecialchars($p['package_name'] ?? 'Unnamed') ?>
           </option>
         <?php endforeach; ?>
       </select>
@@ -115,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div style="margin-bottom:15px;">
       <label style="display:block; margin-bottom:5px;">Price per Person (R)</label>
-      <input type="number" name="price" step="0.01" value="<?= htmlspecialchars($grp['price']) ?>" style="width:100%; padding:10px; background:#2e1200; color:white; border:1px solid #d88d14; border-radius:5px;" required>
+      <input type="number" name="price" step="0.01" value="<?= htmlspecialchars($grp['price_per_person']) ?>" style="width:100%; padding:10px; background:#2e1200; color:white; border:1px solid #d88d14; border-radius:5px;" required>
     </div>
 
     <div style="margin-bottom:15px;">
@@ -123,9 +127,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <input type="number" name="max_capacity" value="<?= htmlspecialchars($grp['max_capacity']) ?>" style="width:100%; padding:10px; background:#2e1200; color:white; border:1px solid #d88d14; border-radius:5px;" required>
     </div>
 
-    <div style="margin-bottom:20px;">
+    <div style="margin-bottom:15px;">
       <label style="display:block; margin-bottom:5px;">Current Bookings Count</label>
       <input type="number" name="current_capacity" value="<?= htmlspecialchars($grp['current_capacity']) ?>" style="width:100%; padding:10px; background:#2e1200; color:white; border:1px solid #d88d14; border-radius:5px;">
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label style="display:block; margin-bottom:5px;">Departure Date</label>
+      <input type="date" name="duration" value="<?= htmlspecialchars($grp['departure_date']) ?>" style="width:100%; padding:10px; background:#2e1200; color:white; border:1px solid #d88d14; border-radius:5px;" required>
     </div>
 
     <button type="submit" style="cursor:pointer; width:100%; padding:12px; border:none; border-radius:50px; background:linear-gradient(to right, #572901, #d88d14); color:white; font-weight:bold;">
