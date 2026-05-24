@@ -10,30 +10,29 @@ $agency_id = $_SESSION['agency_id'];
 // Fetch agency profile details
 $stmt = $pdo->prepare(
     'SELECT ua.agency_name, ua.email, a.city, a.phone_number
-     FROM User_Account ua
-     JOIN Agency a ON a.agency_ID = ua.agency_ID
+     FROM user_account ua
+     JOIN agency a ON a.agency_ID = ua.agency_ID
      WHERE ua.agency_ID = ?'
 );
 $stmt->execute([$agency_id]);
 $agency = $stmt->fetch();
 
 // Calculate total packages this specific agency is offering
-$stmt = $pdo->prepare('SELECT COUNT(*) FROM Travel_package WHERE agency_ID = ?');
+$stmt = $pdo->prepare('SELECT COUNT(*) FROM travel_package WHERE agency_ID = ?');
 $stmt->execute([$agency_id]);
 $total_packages = (int)$stmt->fetchColumn();
 
 // Calculate total group trips
-$stmt = $pdo->prepare('SELECT COUNT(*) FROM Group_Booking WHERE agency_ID = ?');
+$stmt = $pdo->prepare('SELECT COUNT(*) FROM group_booking WHERE agency_ID = ?');
 $stmt->execute([$agency_id]);
 $total_groups = (int)$stmt->fetchColumn();
 
 // Calculate total solo traveller bookings made on this agency's packages
-$stmt = $pdo->prepare('SELECT COUNT(*) FROM Solo_Booking WHERE agency_ID = ?');
+$stmt = $pdo->prepare('SELECT COUNT(*) FROM solo_booking WHERE agency_ID = ?');
 $stmt->execute([$agency_id]);
 $total_bookings = (int)$stmt->fetchColumn();
 
 // Fetch this agency's packages
-// Update the packages query to include package_name
 $pkgs = $pdo->prepare('
     SELECT tp.*, tp.package_name, f.country AS flight_dest, f.flight_date,
            ac.city AS accomm_city, ac.cost_per_night,
@@ -47,12 +46,12 @@ $pkgs = $pdo->prepare('
 $pkgs->execute([$agency_id]);
 $packages = $pkgs->fetchAll();
 
-// Fetch this agency's group trips
+// Fetch this agency's group trips - show package name
 $groups_stmt = $pdo->prepare('
-    SELECT gb.*, tp.total_cost_price as base_price, f.country AS destination
-    FROM Group_Booking gb
-    LEFT JOIN Travel_package tp ON gb.package_ID = tp.package_ID
-    LEFT JOIN Flight f ON tp.flight_ID = f.flight_ID
+    SELECT gb.*, tp.package_name, tp.total_cost_price as base_price, f.country AS flight_country
+    FROM group_booking gb
+    LEFT JOIN travel_package tp ON gb.package_ID = tp.package_ID
+    LEFT JOIN flight f ON tp.flight_ID = f.flight_ID
     WHERE gb.agency_ID = ?
     ORDER BY gb.group_booking_ID DESC
 ');
@@ -181,7 +180,7 @@ $group_trips = $groups_stmt->fetchAll();
           <table class="mini-table" style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="border-bottom: 1px solid rgba(216,141,20,0.2);">
-                <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">ID</th>
+                <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Package Name</th>
                 <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Destination</th>
                 <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Price</th>
                 <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Actions</th>
@@ -190,7 +189,7 @@ $group_trips = $groups_stmt->fetchAll();
             <tbody>
               <?php foreach ($packages as $p): ?>
               <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <td style="padding: 0.7rem 0.5rem;"><?= htmlspecialchars($p['package_name'] ?? $p['flight_dest'] ?? '—') ?></td>
+                <td style="padding: 0.7rem 0.5rem;"><?= htmlspecialchars($p['package_name'] ?? 'Package #' . $p['package_ID']) ?></td>
                 <td style="padding: 0.7rem 0.5rem;"><?= htmlspecialchars($p['flight_dest'] ?? '—') ?></td>
                 <td style="padding: 0.7rem 0.5rem;">R <?= number_format($p['total_cost_price']) ?></td>
                 <td style="padding: 0.7rem 0.5rem;">
@@ -225,29 +224,26 @@ $group_trips = $groups_stmt->fetchAll();
           <table class="mini-table" style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="border-bottom: 1px solid rgba(216,141,20,0.2);">
-                <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">ID</th>
-                <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Destination</th>
+                <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Package Name</th>
                 <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Status</th>
+                <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Capacity</th>
                 <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Actions</th>
               </tr>
             </thead>
             <tbody>
               <?php foreach ($group_trips as $g): ?>
               <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <td style="padding: 0.7rem 0.5rem;">#<?= htmlspecialchars($g['group_booking_ID']) ?></td>
-                <td style="padding: 0.7rem 0.5rem;">
-                  <?= htmlspecialchars($g['destination']) ?>
-                  <div class="group-info">
-                    <?= $g['current_capacity'] ?>/<?= $g['max_capacity'] ?> booked
-                  </div>
-                  <div class="capacity-bar">
-                    <div class="capacity-fill" style="width: <?= ($g['max_capacity'] > 0) ? (($g['current_capacity'] / $g['max_capacity']) * 100) : 0 ?>%;"></div>
-                  </div>
-                </td>
+                <td style="padding: 0.7rem 0.5rem;"><?= htmlspecialchars($g['package_name'] ?? 'Package #' . $g['package_ID']) ?></td>
                 <td style="padding: 0.7rem 0.5rem;">
                   <span class="badge-<?= strtolower($g['status']) ?>">
                     <?= htmlspecialchars($g['status']) ?>
                   </span>
+                </td>
+                <td style="padding: 0.7rem 0.5rem;">
+                  <?= $g['current_capacity'] ?>/<?= $g['max_capacity'] ?> booked
+                  <div class="capacity-bar">
+                    <div class="capacity-fill" style="width: <?= ($g['max_capacity'] > 0) ? (($g['current_capacity'] / $g['max_capacity']) * 100) : 0 ?>%;"></div>
+                  </div>
                 </td>
                 <td style="padding: 0.7rem 0.5rem;">
                   <div class="actions" style="display: flex; gap: 0.3rem;">
