@@ -1,0 +1,205 @@
+/*u25008227*/
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #1a0a00, #2e1200, #1a0a00);
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+/* LEFT PANEL */
+.panel-left {
+    background: linear-gradient(160deg, #0d0500, #1f0900, #3d1500);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.panel-left::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(216,141,20,.3) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 20%, rgba(87,41,1,.4) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.panel-deco {
+    position: absolute;
+    bottom: -5rem;
+    right: -5rem;
+    width: 25rem;
+    height: 25rem;
+    border-radius: 50%;
+    border: 1px solid rgba(216,141,20,.15);
+}
+
+.panel-deco::after {
+    content: '';
+    position: absolute;
+    inset: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid rgba(216,141,20,.08);
+}
+
+.brand {
+    position: relative;
+    z-index: 1;
+}
+
+.brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 8px;
+    color: white;
+}
+
+.brand-name span {
+    color: #d88d14;
+}
+
+.panel-tagline {
+    position: relative;
+    z-index: 1;
+}
+
+.panel-tagline h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    letter-spacing: 4px;
+    color: white;
+    line-height: 1.1;
+    margin: 0 0 1rem 0;
+}
+
+.panel-tagline h2 em {
+    color: #d88d14;
+    font-style: normal;
+}
+
+.panel-tagline p {
+    font-size: .9rem;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.7;
+    max-width: 30ch;
+    letter-spacing: .3px;
+}
+
+/* RIGHT PANEL */
+.panel-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: rgba(0,0,0,0.2);
+}
+
+.form-card {
+    width: 100%;
+    max-width: 420px;
+}
+
+.form-card h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    color: white;
+    margin: 0 0 .4rem 0;
+}
+
+.form-card .subtitle {
+    font-size: .85rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+}
+
+/* FIELD */
+.field {
+    margin-bottom: 1.3rem;
+}
+
+.field label {
+    display: block;
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: .45rem;
+}
+
+.field input {
+    width: 100%;
+    padding: .8rem 1rem;
+    border: 1.5px solid rgba(216,141,20,0.3);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    font-family: 'Inter', sans-serif;
+    font-size: .95rem;
+    color: white;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.field input::placeholder {
+    color: rgba(255,255,255,0.2);
+}
+
+.field input:focus {
+    border-color: #d88d14;
+    box-shadow: 0 0 0 3px rgba(216,141,20,.12);
+}
+
+/* BUTTON */
+.btn-submit {
+    width: 100%;
+    padding: .9rem;
+    background: linear-gradient(to right, #572901, #8f5a04, #d88d14);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: .85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    margin-top: .5rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    transition: opacity .2s, transform .1s;
+}
+
+.btn-submit:hover  { opacity: .9; }
+.btn-submit:active { transform: scale(.98); }
+
+/* ERROR */
+.error-msg {
+    background: rgba(217,48,37,.15);
+    border: 1px solid rgba(217,48,37,.35);
+    color: #ff7b72;
+    border-radius: 8px;
+    padding: .75rem 1rem;
+    font-size: .85rem;
+    margin-bottom: 1.3rem;
+    letter-spacing: .2px;
+}
+
+@media (max-width: 700px) {
+    body { grid-template-columns: 1fr; }
+    .panel-left { display: none; }
+}
