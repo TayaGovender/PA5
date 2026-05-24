@@ -22,8 +22,9 @@ if ($is_edit) {
     }
 }
 
+// Make sure this query returns all available flights and accommodations
 $flights = $pdo->query('SELECT flight_ID, country, flight_duration FROM flight ORDER BY country')->fetchAll();
-$accoms  = $pdo->query('SELECT accomodation_ID, city, country, cost_per_night FROM accomodation ORDER BY country')->fetchAll();
+$accoms = $pdo->query('SELECT accomodation_ID, city, country, cost_per_night FROM accomodation ORDER BY country, city')->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $package_name = trim($_POST['package_name'] ?? '');
