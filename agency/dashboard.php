@@ -32,9 +32,10 @@ $stmt = $pdo->prepare('SELECT COUNT(*) FROM solo_booking WHERE agency_ID = ?');
 $stmt->execute([$agency_id]);
 $total_bookings = (int)$stmt->fetchColumn();
 
-// Fetch this agency's packages
+// Fetch this agency's packages - FIXED: removed tp.duration, added tp.start_date
 $pkgs = $pdo->prepare('
-    SELECT tp.*, tp.package_name, f.country AS flight_dest, f.flight_date,
+    SELECT tp.package_ID, tp.package_name, tp.total_cost_price, tp.start_date,
+           f.country AS flight_dest, f.flight_date, f.flight_duration,
            ac.city AS accomm_city, ac.cost_per_night,
            (SELECT ROUND(AVG(rv.rating_score),1) FROM review rv WHERE rv.package_ID = tp.package_ID) AS avg_review
     FROM travel_package tp
@@ -46,7 +47,7 @@ $pkgs = $pdo->prepare('
 $pkgs->execute([$agency_id]);
 $packages = $pkgs->fetchAll();
 
-// Fetch this agency's group trips - show package name
+// Fetch this agency's group trips
 $groups_stmt = $pdo->prepare('
     SELECT gb.*, tp.package_name, tp.total_cost_price as base_price, f.country AS flight_country
     FROM group_booking gb
@@ -182,6 +183,7 @@ $group_trips = $groups_stmt->fetchAll();
               <tr style="border-bottom: 1px solid rgba(216,141,20,0.2);">
                 <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Package Name</th>
                 <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Destination</th>
+                <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Start Date</th>
                 <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Price</th>
                 <th style="text-align: left; padding: 0.5rem; color: #d88d14; font-size: 0.7rem;">Actions</th>
               </tr>
@@ -191,6 +193,7 @@ $group_trips = $groups_stmt->fetchAll();
               <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
                 <td style="padding: 0.7rem 0.5rem;"><?= htmlspecialchars($p['package_name'] ?? 'Package #' . $p['package_ID']) ?></td>
                 <td style="padding: 0.7rem 0.5rem;"><?= htmlspecialchars($p['flight_dest'] ?? '—') ?></td>
+                <td style="padding: 0.7rem 0.5rem;"><?= htmlspecialchars($p['start_date']) ?></td>
                 <td style="padding: 0.7rem 0.5rem;">R <?= number_format($p['total_cost_price']) ?></td>
                 <td style="padding: 0.7rem 0.5rem;">
                   <div class="actions" style="display: flex; gap: 0.3rem;">
