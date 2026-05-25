@@ -10,7 +10,7 @@ $agency_id = $_SESSION['agency_id'];
 $pkg_id    = isset($_GET['id']) ? (int)$_GET['id'] : null;
 $is_edit   = $pkg_id !== null;
 $errors    = [];
-$pkg       = ['package_name' => '', 'flight_ID' => '', 'accomodation_ID' => '', 'total_cost_price' => '', 'duration' => ''];
+$pkg       = ['package_name' => '', 'flight_ID' => '', 'accomodation_ID' => '', 'total_cost_price' => '', 'start_date' => ''];
 
 if ($is_edit) {
     $stmt = $pdo->prepare('SELECT * FROM travel_package WHERE package_ID = ? AND agency_ID = ?');
@@ -22,31 +22,30 @@ if ($is_edit) {
     }
 }
 
-// Make sure this query returns all available flights and accommodations
 $flights = $pdo->query('SELECT flight_ID, country, flight_duration FROM flight ORDER BY country')->fetchAll();
-$accoms = $pdo->query('SELECT accomodation_ID, city, country, cost_per_night FROM accomodation ORDER BY country, city')->fetchAll();
+$accoms  = $pdo->query('SELECT accomodation_ID, city, country, cost_per_night FROM accomodation ORDER BY country')->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $package_name = trim($_POST['package_name'] ?? '');
     $flight_id    = !empty($_POST['flight_ID']) ? (int)$_POST['flight_ID'] : null;
     $accom_id     = !empty($_POST['accomodation_ID']) ? (int)$_POST['accomodation_ID'] : null;
     $total_cost   = !empty($_POST['total_cost_price']) ? (float)$_POST['total_cost_price'] : 0;
-    $duration     = !empty($_POST['duration']) ? $_POST['duration'] : '';
+    $start_date   = !empty($_POST['start_date']) ? $_POST['start_date'] : '';
 
     if (empty($package_name)) {
         $errors[] = "Package name is required.";
     }
-    if (empty($duration)) {
-        $errors[] = "Duration/Start date is required.";
+    if (empty($start_date)) {
+        $errors[] = "Start date is required.";
     }
 
     if (empty($errors)) {
         if ($is_edit) {
-            $stmt = $pdo->prepare('UPDATE travel_package SET package_name = ?, flight_ID = ?, accomodation_ID = ?, total_cost_price = ?, duration = ? WHERE package_ID = ? AND agency_ID = ?');
-            $stmt->execute([$package_name, $flight_id, $accom_id, $total_cost, $duration, $pkg_id, $agency_id]);
+            $stmt = $pdo->prepare('UPDATE travel_package SET package_name = ?, flight_ID = ?, accomodation_ID = ?, total_cost_price = ?, start_date = ? WHERE package_ID = ? AND agency_ID = ?');
+            $stmt->execute([$package_name, $flight_id, $accom_id, $total_cost, $start_date, $pkg_id, $agency_id]);
         } else {
-            $stmt = $pdo->prepare('INSERT INTO travel_package (agency_ID, package_name, flight_ID, accomodation_ID, total_cost_price, duration) VALUES (?, ?, ?, ?, ?, ?)');
-            $stmt->execute([$agency_id, $package_name, $flight_id, $accom_id, $total_cost, $duration]);
+            $stmt = $pdo->prepare('INSERT INTO travel_package (agency_ID, package_name, flight_ID, accomodation_ID, total_cost_price, start_date) VALUES (?, ?, ?, ?, ?, ?)');
+            $stmt->execute([$agency_id, $package_name, $flight_id, $accom_id, $total_cost, $start_date]);
         }
         header('Location: /tripistry/agency/dashboard.php');
         exit;
@@ -115,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div style="margin-bottom:20px;">
       <label style="display:block; margin-bottom:5px;">Start Date</label>
-      <input type="date" name="duration" value="<?= htmlspecialchars($pkg['duration']) ?>" style="width:100%; padding:10px; background:#2e1200; color:white; border:1px solid #d88d14; border-radius:5px;" required>
+      <input type="date" name="start_date" value="<?= htmlspecialchars($pkg['start_date']) ?>" style="width:100%; padding:10px; background:#2e1200; color:white; border:1px solid #d88d14; border-radius:5px;" required>
     </div>
 
     <button type="submit" class="btn-primary" style="cursor:pointer; width:100%; padding:12px; border:none; border-radius:50px; background:linear-gradient(to right, #572901, #d88d14); color:white; font-weight:bold;">

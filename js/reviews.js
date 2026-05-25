@@ -122,6 +122,7 @@ function getPackages() {
                         attachRateButtons();
                     } else {
                         packages.innerHTML = '<div style="color:rgba(255,255,255,0.5);">No packages found.</div>';
+                        console.log("No packages data returned from server");
                     }
                 } catch(e) {
                     console.error("Parse error:", e);
@@ -175,7 +176,8 @@ function attachRateButtons() {
             e.preventDefault();
             currentItemId = this.getAttribute("data-id");
             currentItemType = this.getAttribute("data-type");
-            document.getElementById("modalContent").innerHTML = "Rate " + currentItemType + ": " + this.parentElement.querySelector('.agency-name, .package-name').innerText;
+            var itemName = this.parentElement.querySelector('.agency-name, .package-name').innerText;
+            document.getElementById("modalContent").innerHTML = "Rate " + currentItemType + ": " + itemName;
             modal.showModal();
         });
     }
@@ -239,6 +241,9 @@ document.getElementById("submitReview").addEventListener("click", function() {
                             setTimeout(function() {
                                 window.location.href = "/tripistry/traveller/package_view.php?id=" + currentItemId;
                             }, 1000);
+                        } else if (currentItemType === 'agency') {
+                            // Refresh agencies to show updated rating
+                            getAgencies();
                         }
                     } else {
                         alert("Error: " + (result.error || "Failed to save review"));
