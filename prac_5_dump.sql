@@ -1,0 +1,1109 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: May 24, 2026 at 07:25 PM
+-- Server version: 12.2.2-MariaDB
+-- PHP Version: 8.0.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `practical_5`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accomodation`
+--
+
+CREATE TABLE `accomodation` (
+  `accomodation_ID` int(11) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `street` varchar(100) DEFAULT NULL,
+  `street_number` int(11) DEFAULT NULL,
+  `postal_code` char(10) DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
+  `cost_per_night` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `accomodation`
+--
+
+INSERT INTO `accomodation` (`accomodation_ID`, `name`, `country`, `city`, `street`, `street_number`, `postal_code`, `duration`, `cost_per_night`) VALUES
+(1, NULL, 'France', 'Paris', 'Rue Cler', 15, '75007', 7, 2500),
+(2, NULL, 'Japan', 'Tokyo', 'Shibuya', 10, '150-00', 10, 1800),
+(3, NULL, 'South Africa', 'Cape Town', 'V&A Waterfront', 5, '8001', 5, 3000),
+(4, NULL, 'USA', 'New York', 'Broadway', 200, '10012', 4, 4000),
+(5, NULL, 'South Africa', 'Durban', 'North Beach', 22, '4001', 3, 1200),
+(6, 'Table Bay Hotel', 'South Africa', 'Cape Town', 'Quay 6', 1, '8001', 5, 4500),
+(7, 'The Silo Hotel', 'South Africa', 'Cape Town', 'Silo Square', 6, '8001', 5, 8500),
+(8, 'Mount Nelson Hotel', 'South Africa', 'Cape Town', 'Orange Street', 76, '8001', 5, 6500),
+(9, 'Four Seasons', 'South Africa', 'Johannesburg', 'West Street', 1, '2196', 4, 5500),
+(10, 'The Saxon Hotel', 'South Africa', 'Johannesburg', 'Saxon Road', 36, '2196', 4, 7500),
+(11, 'Montecasino', 'South Africa', 'Johannesburg', 'Montecasino Blvd', 1, '2196', 4, 2500),
+(12, 'The Oyster Box', 'South Africa', 'Durban', 'Lagrange Road', 2, '4320', 3, 4800),
+(13, 'Hilton Durban', 'South Africa', 'Durban', 'Walnut Road', 12, '4001', 3, 2200),
+(14, 'Sheraton Pretoria', 'South Africa', 'Pretoria', 'Arcadia Street', 643, '0002', 4, 2800),
+(15, 'The Capital Menlyn', 'South Africa', 'Pretoria', 'Hookey Road', 1, '0181', 4, 3200),
+(16, 'Ritz Paris', 'France', 'Paris', 'Place Vendôme', 15, '75001', 7, 12000),
+(17, 'Hotel de Crillon', 'France', 'Paris', 'Place de la Concorde', 10, '75008', 7, 11000),
+(18, 'Shangri-La Paris', 'France', 'Paris', 'Avenue d\'Iéna', 10, '75116', 7, 9500),
+(19, 'Park Hyatt Tokyo', 'Japan', 'Tokyo', 'Nishi Shinjuku', 3, '163-1055', 10, 8000),
+(20, 'The Peninsula Tokyo', 'Japan', 'Tokyo', 'Yurakucho', 1, '100-0006', 10, 9000),
+(21, 'Aman Tokyo', 'Japan', 'Tokyo', 'Otemachi', 1, '100-0004', 10, 15000),
+(22, 'The Plaza', 'USA', 'New York', 'Fifth Avenue', 768, '10019', 4, 7000),
+(23, 'The Ritz-Carlton', 'USA', 'New York', 'Central Park South', 50, '10019', 4, 8500),
+(24, 'Four Seasons New York', 'USA', 'New York', 'East 57th Street', 57, '10022', 4, 9500),
+(25, 'The Savoy', 'UK', 'London', 'Strand', 1, 'WC2R 0EZ', 5, 6000),
+(26, 'Claridge\'s', 'UK', 'London', 'Brook Street', 55, 'W1K 4HR', 5, 7500),
+(27, 'The Ritz London', 'UK', 'London', 'Piccadilly', 150, 'W1J 9BR', 5, 7000),
+(28, 'Hotel Hassler', 'Italy', 'Rome', 'Piazza Trinità dei Monti', 6, '00187', 6, 5500),
+(29, 'St. Regis Rome', 'Italy', 'Rome', 'Via Vittorio Emanuele Orlando', 3, '00185', 6, 6000),
+(30, 'Four Seasons Florence', 'Italy', 'Florence', 'Borgo Pinti', 99, '50121', 6, 8000),
+(31, 'Animal Resort', 'Madagascar', 'Madagascar', 'PingPong', 34, '23456', 8, 3000),
+(32, 'Queens Land', 'Thailand', 'PongPing', 'Sunny', 78, '97854', 5, 7000),
+(33, 'Snake Bed', 'Australia', 'Melborne', 'Eggs trail', 12, '57689', 4, 10000),
+(34, 'Kings Lay', 'Peru', 'lema', 'Grandes', 56, '233455', 6, 12300);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `agency`
+--
+
+CREATE TABLE `agency` (
+  `agency_ID` int(11) NOT NULL,
+  `agency_name` varchar(100) DEFAULT NULL,
+  `phone_number` char(20) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `street` varchar(100) DEFAULT NULL,
+  `street_number` int(11) DEFAULT NULL,
+  `postal_code` char(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `agency`
+--
+
+INSERT INTO `agency` (`agency_ID`, `agency_name`, `phone_number`, `city`, `street`, `street_number`, `postal_code`) VALUES
+(1, 'Hatfield Travel', '0123456789', 'Pretoria', 'Hatfield', 12, '0028'),
+(2, 'Joburg Escapes', '0112345678', 'Johannesburg', 'Rosebank', 34, '2196'),
+(3, 'Cape Town Tours', '0213456789', 'Cape Town', 'Camps Bay', 56, '8005'),
+(4, 'Durban Getaways', '0314567890', 'Durban', 'Umhlanga', 78, '4319'),
+(5, 'Brooklyn Travel', '0129876543', 'Pretoria', 'Brooklyn', 90, '0181'),
+(6, 'Global Tours', '0115551234', 'Johannesburg', 'Sandton Drive', 100, '2196'),
+(7, 'World Explorer', '0215555678', 'Cape Town', 'Long Street', 45, '8001'),
+(8, 'Dream Vacations', '0315559012', 'Durban', 'Florida Road', 23, '4001'),
+(9, 'Epic Journeys', '0125553456', 'Pretoria', 'Church Street', 67, '0002'),
+(10, 'Safari Specialist', '0135557890', 'Nelspruit', 'Hazyview Road', 12, '1200'),
+(11, 'Garden Route Travel', '0445552345', 'George', 'York Street', 89, '6529'),
+(12, 'Winelands Tours', '0215556789', 'Stellenbosch', 'Dorp Street', 34, '7600'),
+(13, 'Coastal Getaways', '0325550123', 'Ballito', 'Bismarck Street', 56, '4420'),
+(14, 'Mountain Escapes', '0365554567', 'Drakensberg', 'Main Road', 78, '3340'),
+(15, 'Desert Adventures', '0545558901', 'Upington', 'Market Street', 23, '8800'),
+(16, 'Cape Point Travel', '0215551111', 'Cape Town', 'Victoria Road', 1, '8005'),
+(17, 'Jozi Adventures', '0115552222', 'Johannesburg', 'Fourth Avenue', 50, '2196'),
+(18, 'Durban Discovery', '0315553333', 'Durban', 'Marine Parade', 22, '4001'),
+(19, 'Pretoria Premier', '0125554444', 'Pretoria', 'Bourke Street', 15, '0002'),
+(20, 'Sun City Resort', '0145555555', 'Sun City', 'Pilanesberg Road', 1, '0316'),
+(21, 'Luxury Escapes', '0115556666', 'Johannesburg', 'West Street', 88, '2196'),
+(22, 'Budget Travel SA', '0215557777', 'Cape Town', 'Lower Main Road', 34, '7925'),
+(23, 'Family Holidays', '0315558888', 'Durban', 'Ormonde Drive', 12, '4051'),
+(24, 'Honeymoon Specialists', '0125559999', 'Pretoria', 'Florence Street', 7, '0181'),
+(25, 'Backpacker Connect', '0215550000', 'Cape Town', 'Kloof Street', 145, '8001'),
+(26, 'Eco Travel', '0465551212', 'Grahamstown', 'High Street', 32, '6139'),
+(27, 'Cultural Tours', '0335553434', 'Pietermaritzburg', 'Commercial Road', 45, '3201'),
+(28, 'Wildlife Adventures', '0155555656', 'Polokwane', 'Thabo Mbeki Street', 78, '0699'),
+(29, 'History Heritage', '0515557878', 'Bloemfontein', 'Aliwal Street', 23, '9301'),
+(30, 'Photography Safaris', '0445559090', 'Knysna', 'Main Street', 56, '6571');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `agency_staff`
+--
+
+CREATE TABLE `agency_staff` (
+  `agency_ID` int(11) NOT NULL,
+  `staff_ID` int(11) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `agency_staff`
+--
+
+INSERT INTO `agency_staff` (`agency_ID`, `staff_ID`, `first_name`, `last_name`, `date_of_birth`) VALUES
+(1, 1, 'Sarah', 'Connor', '1990-01-01'),
+(1, 2, 'Bruce', 'Wayne', '1985-05-15'),
+(2, 1, 'Clark', 'Kent', '1992-08-20'),
+(3, 1, 'Diana', 'Prince', '1988-03-10'),
+(4, 1, 'Barry', 'Allen', '1995-11-11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `agency_staff_phone`
+--
+
+CREATE TABLE `agency_staff_phone` (
+  `agency_ID` int(11) NOT NULL,
+  `staff_ID` int(11) NOT NULL,
+  `phone_number` char(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `agency_staff_phone`
+--
+
+INSERT INTO `agency_staff_phone` (`agency_ID`, `staff_ID`, `phone_number`) VALUES
+(1, 1, '0125550001'),
+(1, 2, '0125550002'),
+(2, 1, '0115550003'),
+(3, 1, '0215550004'),
+(4, 1, '0315550005');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `airbnb`
+--
+
+CREATE TABLE `airbnb` (
+  `accomodation_ID` int(11) NOT NULL,
+  `property_type` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `airbnb`
+--
+
+INSERT INTO `airbnb` (`accomodation_ID`, `property_type`) VALUES
+(1, 'Entire Apartment'),
+(2, 'Entire Loft'),
+(3, 'Entire House'),
+(4, 'Private Room'),
+(5, 'Private Studio'),
+(6, 'Entire Villa'),
+(7, 'Luxury Suite'),
+(8, 'Entire Apartment'),
+(9, 'Private Room'),
+(10, 'Entire House'),
+(11, 'Entire Villa'),
+(12, 'Beachfront Villa'),
+(13, 'Entire Apartment'),
+(14, 'Private Room'),
+(15, 'Entire House'),
+(16, 'Luxury Penthouse'),
+(17, 'Entire Apartment'),
+(18, 'Private Room'),
+(19, 'Traditional Ryokan'),
+(20, 'Entire Apartment'),
+(21, 'Luxury Suite'),
+(22, 'Entire Apartment'),
+(23, 'Private Room'),
+(24, 'Luxury Penthouse'),
+(25, 'Entire Apartment'),
+(26, 'Private Room'),
+(27, 'Entire House'),
+(28, 'Entire Apartment'),
+(29, 'Private Room'),
+(30, 'Luxury Villa');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `attraction`
+--
+
+CREATE TABLE `attraction` (
+  `attraction_ID` int(11) NOT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `street` varchar(100) DEFAULT NULL,
+  `street_number` int(11) DEFAULT NULL,
+  `postal_code` char(10) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `cost` int(11) DEFAULT NULL,
+  `image_url` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `attraction`
+--
+
+INSERT INTO `attraction` (`attraction_ID`, `country`, `city`, `street`, `street_number`, `postal_code`, `description`, `cost`, `image_url`) VALUES
+(1, 'France', 'Paris', 'Champ de Mars', 5, '75007', 'Eiffel Tower Tour', 500, 'https://plus.unsplash.com/premium_photo-1719430569503-338fc89eb21f?q=80&w=686&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+(2, 'France', 'Paris', 'Louvre', 1, '75001', 'Louvre Museum Entry', 300, 'https://images.unsplash.com/photo-1684139377233-e47d92df1ae7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bG91cnZlfGVufDB8fDB8fHww'),
+(3, 'Japan', 'Tokyo', 'Taito', 2, '111-00', 'Senso-ji Temple', 0, 'https://plus.unsplash.com/premium_photo-1690957796569-32bd288ca4bb?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c2Vuc29qaSUyMHRlbXBsZXxlbnwwfHwwfHx8MA%3D%3D'),
+(4, 'South Africa', 'Cape Town', 'Table Mountain', 1, '8001', 'Cable Car Ride', 450, 'https://images.unsplash.com/photo-1606799955515-85468ee78c26?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFibGUlMjBtb3VudGFpbnxlbnwwfHwwfHx8MA%3D%3D'),
+(5, 'South Africa', 'Johannesburg', 'Jan Smuts Avenue', 1, '2024', 'Apartheid Museum', 120, 'https://plus.unsplash.com/premium_photo-1742418272762-43e86990c914?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YXBhcnRoZWlkJTIwbXVzZXVtfGVufDB8fDB8fHww'),
+(6, 'South Africa', 'Cape Town', 'V&A Waterfront', 2, '8001', 'Robben Island Ferry', 380, 'https://images.unsplash.com/photo-1661112483600-bf3485542ec7?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Um9iYmVuJTIwaXNsYW5kfGVufDB8fDB8fHww'),
+(7, 'South Africa', 'Pretoria', 'Paul Kruger Street', 1, '0002', 'Voortrekker Monument', 80, 'https://media.istockphoto.com/id/157636381/photo/voortrekker-monument.webp?a=1&b=1&s=612x612&w=0&k=20&c=N1kVxpBy3a9kWm1IzI5_OudK0-FsgVAR5s9SdFSbfYA='),
+(8, 'South Africa', 'Durban', 'Ormonde Drive', 1, '4051', 'Moses Mabhida Stadium', 150, 'https://images.unsplash.com/photo-1696761354493-b54ae0e49c76?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bW9zZXMlMjBNYWJoaWRhJTIwc3RhZGl1bXxlbnwwfHwwfHx8MA%3D%3D'),
+(9, 'Italy', 'Rome', 'Piazza del Colosseo', 1, '00184', 'Colosseum', 200, 'https://plus.unsplash.com/premium_photo-1661963952208-2db3512ef3de?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y29sb3NzZXVtfGVufDB8fDB8fHww'),
+(10, 'Italy', 'Rome', 'Piazza della Rotonda', 1, '00186', 'Pantheon', 50, 'https://plus.unsplash.com/premium_photo-1676391399721-87078f87da25?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGFudGhlb258ZW58MHx8MHx8fDA%3D'),
+(11, 'Italy', 'Florence', 'Piazza del Duomo', 1, '50122', 'Florence Cathedral', 100, 'https://images.unsplash.com/photo-1476362174823-3a23f4aa6d76?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmxvcmVuY2UlMjBjYXRoZWRyYWx8ZW58MHx8MHx8fDA%3D'),
+(12, 'Italy', 'Venice', 'Piazza San Marco', 1, '30124', 'St Marks Square', 0, 'https://images.unsplash.com/photo-1681759180062-11a4e7a18d9b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3QlMjBtYXJrcyUyMHNxdWFyZXxlbnwwfHwwfHx8MA%3D%3D'),
+(13, 'UK', 'London', 'Riverside Building', 1, 'SE1 9SG', 'London Eye', 350, 'https://images.unsplash.com/photo-1587659901518-7020d4413085?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bG9uZG9uJTIwZXllfGVufDB8fDB8fHww'),
+(14, 'UK', 'London', 'Buckingham Palace', 1, 'SW1A 1AA', 'Buckingham Palace', 280, 'https://images.unsplash.com/photo-1582581388879-65cdb825ec67?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YnVja2luZ2hhbSUyMHBhbGFjZXxlbnwwfHwwfHx8MA%3D%3D'),
+(15, 'UK', 'London', 'Tower Bridge', 1, 'SE1 2UP', 'Tower Bridge Exhibition', 150, 'https://plus.unsplash.com/premium_photo-1661962726504-fa8f464a1bb8?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dG93ZXIlMjBicmlkZ2UlMjBleGhpYml0aW9ufGVufDB8fDB8fHww'),
+(16, 'USA', 'New York', 'Central Park West', 1, '10024', 'Central Park', 0, 'https://plus.unsplash.com/premium_photo-1697730064923-dd664fc81d19?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2VudHJhbCUyMHBhcmt8ZW58MHx8MHx8fDA%3D'),
+(17, 'USA', 'New York', 'Liberty Island', 1, '10004', 'Statue of Liberty', 250, 'https://plus.unsplash.com/premium_photo-1681803531285-75db948035d3?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+(18, 'USA', 'California', 'Hollywood Boulevard', 1, '90028', 'Hollywood Walk of Fame', 0, 'https://images.unsplash.com/photo-1613051744581-d87fbe8c9671?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG9sbHl3b29kJTIwd2FsayUyMG9mJTIwZmFtZXxlbnwwfHwwfHx8MA%3D%3D'),
+(19, 'Japan', 'Kyoto', 'Higashiyama', 1, '605-0001', 'Kiyomizu-dera Temple', 400, 'https://images.unsplash.com/photo-1637679105331-a0cea188b83e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8a2l5b21penUlMjBkZXJhfGVufDB8fDB8fHww'),
+(20, 'Japan', 'Osaka', 'Osaka Castle', 1, '540-0002', 'Osaka Castle', 350, 'https://images.unsplash.com/photo-1547647496-b2d16f4fdb69?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8b3Nha2ElMjBjYXN0bGV8ZW58MHx8MHx8fDA%3D'),
+(21, 'Thailand', 'Bangkok', 'Na Phra Lan Road', 1, '10200', 'Grand Palace', 500, 'https://plus.unsplash.com/premium_photo-1697730494992-7d5a0c46ea52?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z3JhbmQlMjBwYWxhY2V8ZW58MHx8MHx8fDA%3D'),
+(22, 'Thailand', 'Phuket', 'Damrong Road', 1, '83000', 'Big Buddha', 0, 'https://images.unsplash.com/photo-1513415564515-763d91423bdd?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8YmlnJTIwYnVkZGhhfGVufDB8fDB8fHww'),
+(23, 'Australia', 'Sydney', 'Bennelong Point', 1, '2000', 'Sydney Opera House', 250, 'https://images.unsplash.com/photo-1523059623039-a9ed027e7fad?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c3lkbmV5JTIwb3BlcmElMjBob3VzZXxlbnwwfHwwfHx8MA%3D%3D'),
+(24, 'Australia', 'Uluru', 'Uluru Road', 1, '0872', 'Uluru Rock', 180, 'https://images.unsplash.com/photo-1654692870756-ea1ebcb8be1d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dWx1cnUlMjByb2NrfGVufDB8fDB8fHww'),
+(25, 'Peru', 'Cusco', 'Machu Picchu', 1, '08000', 'Machu Picchu', 800, 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWFjaHUlMjBwaWNjaHV8ZW58MHx8MHx8fDA%3D');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `attraction_times`
+--
+
+CREATE TABLE `attraction_times` (
+  `attraction_ID` int(11) NOT NULL,
+  `opening_times` time NOT NULL,
+  `closing_times` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `attraction_times`
+--
+
+INSERT INTO `attraction_times` (`attraction_ID`, `opening_times`, `closing_times`) VALUES
+(1, '09:00:00', '23:00:00'),
+(2, '09:00:00', '18:00:00'),
+(3, '06:00:00', '17:00:00'),
+(4, '08:00:00', '19:00:00'),
+(5, '09:00:00', '17:00:00'),
+(6, '08:00:00', '18:00:00'),
+(7, '08:00:00', '18:00:00'),
+(8, '09:00:00', '20:00:00'),
+(9, '08:30:00', '19:00:00'),
+(10, '09:00:00', '19:30:00'),
+(11, '10:00:00', '16:45:00'),
+(12, '09:30:00', '18:00:00'),
+(13, '10:00:00', '20:30:00'),
+(14, '09:30:00', '18:30:00'),
+(15, '09:30:00', '18:00:00'),
+(16, '06:00:00', '22:00:00'),
+(17, '08:30:00', '17:30:00'),
+(18, '00:00:00', '23:59:00'),
+(19, '06:00:00', '18:00:00'),
+(20, '09:00:00', '17:00:00'),
+(21, '08:30:00', '15:30:00'),
+(22, '08:00:00', '19:00:00'),
+(23, '09:00:00', '17:00:00'),
+(24, '08:00:00', '18:00:00'),
+(25, '06:00:00', '17:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `flight`
+--
+
+CREATE TABLE `flight` (
+  `flight_ID` int(11) NOT NULL,
+  `airline_ID` int(11) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `flight_duration` int(11) DEFAULT NULL,
+  `flight_date` date DEFAULT NULL,
+  `is_domestic` tinyint(1) DEFAULT NULL,
+  `is_international` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `flight`
+--
+
+INSERT INTO `flight` (`flight_ID`, `airline_ID`, `country`, `flight_duration`, `flight_date`, `is_domestic`, `is_international`) VALUES
+(1, 101, 'France', 12, '2026-10-01', 0, 1),
+(2, 102, 'Japan', 16, '2026-11-15', 0, 1),
+(3, 103, 'South Africa', 2, '2026-12-05', 1, 0),
+(4, 101, 'USA', 18, '2026-09-20', 0, 1),
+(5, 104, 'South Africa', 1, '2026-08-10', 1, 0),
+(6, 105, 'Italy', 10, '2026-07-15', 0, 1),
+(7, 106, 'Thailand', 14, '2026-08-20', 0, 1),
+(8, 107, 'Australia', 20, '2026-09-10', 0, 1),
+(9, 108, 'Peru', 24, '2026-10-05', 0, 1),
+(10, 109, 'UK', 12, '2026-11-01', 0, 1),
+(11, 110, 'USA', 18, '2026-12-12', 0, 1),
+(12, 103, 'South Africa', 2, '2027-01-15', 1, 0),
+(13, 104, 'South Africa', 1, '2027-02-20', 1, 0),
+(14, 105, 'France', 12, '2027-03-10', 0, 1),
+(15, 106, 'Japan', 16, '2027-04-05', 0, 1),
+(16, 107, 'Italy', 10, '2027-05-15', 0, 1),
+(17, 108, 'Thailand', 14, '2027-06-20', 0, 1),
+(18, 109, 'Australia', 20, '2027-07-10', 0, 1),
+(19, 110, 'Peru', 24, '2027-08-05', 0, 1),
+(20, 101, 'USA', 18, '2027-09-15', 0, 1),
+(21, 190, 'Madagascar', 7, '2026-07-25', 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `group_booking`
+--
+
+CREATE TABLE `group_booking` (
+  `group_booking_ID` int(11) NOT NULL,
+  `package_ID` int(11) NOT NULL,
+  `agency_ID` int(11) NOT NULL,
+  `traveler_ID` int(11) DEFAULT NULL,
+  `destination` varchar(255) DEFAULT NULL,
+  `status` enum('Open','Full','Departing','Completed','Cancelled') DEFAULT 'Open',
+  `price_per_person` decimal(10,2) NOT NULL,
+  `max_capacity` int(11) NOT NULL,
+  `current_capacity` int(11) DEFAULT 1,
+  `departure_date` date NOT NULL,
+  `return_date` date DEFAULT NULL,
+  `booking_date` date DEFAULT curdate(),
+  `payment_status` enum('Pending','Paid','Refunded') DEFAULT 'Pending',
+  `description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `group_booking`
+--
+
+INSERT INTO `group_booking` (`group_booking_ID`, `package_ID`, `agency_ID`, `traveler_ID`, `destination`, `status`, `price_per_person`, `max_capacity`, `current_capacity`, `departure_date`, `return_date`, `booking_date`, `payment_status`, `description`) VALUES
+(2, 12, 1, NULL, 'Safari ride', 'Open', 70000.00, 40, 18, '2026-05-31', NULL, '2026-05-24', 'Pending', NULL),
+(5, 12, 1, 1, 'Safari ride', 'Open', 70000.00, 40, 1, '2026-05-31', NULL, '2026-05-24', 'Pending', NULL),
+(6, 8, 1, NULL, 'Snowy Escape', 'Open', 50000.00, 45, 40, '2026-05-27', NULL, '2026-05-24', 'Pending', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hotel`
+--
+
+CREATE TABLE `hotel` (
+  `accomodation_ID` int(11) NOT NULL,
+  `catering_type` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `hotel`
+--
+
+INSERT INTO `hotel` (`accomodation_ID`, `catering_type`) VALUES
+(1, 'Bed and Breakfast'),
+(3, 'Full Board'),
+(4, 'Room Only'),
+(6, 'Bed and Breakfast'),
+(7, 'Full Board'),
+(8, 'Half Board'),
+(9, 'Room Only'),
+(10, 'Full Board'),
+(11, 'Bed and Breakfast'),
+(12, 'Full Board'),
+(13, 'Room Only'),
+(14, 'Half Board'),
+(15, 'Bed and Breakfast'),
+(16, 'Full Board'),
+(17, 'Full Board'),
+(18, 'Half Board'),
+(19, 'Room Only'),
+(20, 'Bed and Breakfast'),
+(21, 'Full Board'),
+(22, 'Room Only'),
+(23, 'Half Board'),
+(24, 'Full Board'),
+(25, 'Bed and Breakfast'),
+(26, 'Full Board'),
+(27, 'Half Board'),
+(28, 'Bed and Breakfast'),
+(29, 'Room Only'),
+(30, 'Full Board');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `package_attraction`
+--
+
+CREATE TABLE `package_attraction` (
+  `package_ID` int(11) NOT NULL,
+  `attraction_ID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `package_attraction`
+--
+
+INSERT INTO `package_attraction` (`package_ID`, `attraction_ID`) VALUES
+(7, 2),
+(2, 3),
+(3, 4),
+(28, 16),
+(37, 16),
+(37, 17);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `package_restaurant`
+--
+
+CREATE TABLE `package_restaurant` (
+  `package_ID` int(11) NOT NULL,
+  `restaurant_ID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `package_restaurant`
+--
+
+INSERT INTO `package_restaurant` (`package_ID`, `restaurant_ID`) VALUES
+(7, 1),
+(2, 3),
+(3, 4),
+(37, 16);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rating`
+--
+
+CREATE TABLE `rating` (
+  `agency_ID` int(11) NOT NULL,
+  `traveler_ID` int(11) NOT NULL,
+  `rating_ID` int(11) NOT NULL,
+  `description` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `rating`
+--
+
+INSERT INTO `rating` (`agency_ID`, `traveler_ID`, `rating_ID`, `description`) VALUES
+(1, 1, 1, 'Great service, highly recommend!'),
+(1, 4, 2, 'Loved the Paris itinerary.'),
+(2, 2, 1, 'A bit slow on the email replies.'),
+(3, 3, 1, 'Amazing trip planning.'),
+(4, 5, 1, 'Standard service, nothing special.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurant`
+--
+
+CREATE TABLE `restaurant` (
+  `restaurant_ID` int(11) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `rating` int(11) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `street` varchar(100) DEFAULT NULL,
+  `street_number` int(11) DEFAULT NULL,
+  `postal_code` char(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `restaurant`
+--
+
+INSERT INTO `restaurant` (`restaurant_ID`, `name`, `rating`, `country`, `city`, `street`, `street_number`, `postal_code`) VALUES
+(1, 'Le Jules Verne', 5, 'France', 'Paris', 'Champ de Mars', 5, '75007'),
+(2, 'Cafe de Flore', 4, 'France', 'Paris', 'Blvd Saint-Germain', 172, '75006'),
+(3, 'Sukiyabashi Jiro', 5, 'Japan', 'Tokyo', 'Ginza', 4, '104-00'),
+(4, 'The Test Kitchen', 4, 'South Africa', 'Cape Town', 'Woodstock', 375, '7915'),
+(5, 'The Grillhouse', 4, 'South Africa', 'Johannesburg', 'Oxford Road', 30, '2196'),
+(6, 'Gold Restaurant', 5, 'South Africa', 'Cape Town', 'Bennett Street', 15, '8001'),
+(7, 'Moyo', 4, 'South Africa', 'Pretoria', 'Pierneef Street', 1, '0181'),
+(8, 'The Oyster Box Grill', 5, 'South Africa', 'Durban', 'Lagrange Road', 2, '4320'),
+(9, 'La Colombe', 5, 'South Africa', 'Cape Town', 'Silvermist Road', 1, '7806'),
+(10, 'Gallo Nero', 4, 'Italy', 'Rome', 'Via Veneto', 45, '00187'),
+(11, 'Trattoria Da Enzo', 5, 'Italy', 'Florence', 'Via dei Neri', 75, '50122'),
+(12, 'Osteria Francescana', 5, 'Italy', 'Modena', 'Via Stella', 22, '41121'),
+(13, 'Dishoom', 4, 'UK', 'London', 'Upper St Martin Lane', 5, 'WC2H 9FB'),
+(14, 'The Ledbury', 5, 'UK', 'London', 'Ledbury Road', 127, 'W11 2AQ'),
+(15, 'Dabbous', 4, 'UK', 'London', 'Blanchard Road', 39, 'W14 0NN'),
+(16, 'Katz Delicatessen', 4, 'USA', 'New York', 'East Houston Street', 205, '10002'),
+(17, 'Peter Luger Steakhouse', 5, 'USA', 'New York', 'Broadway', 178, '11211'),
+(18, 'The French Laundry', 5, 'USA', 'California', 'Washington Street', 6640, '94559'),
+(19, 'Sushi Saito', 5, 'Japan', 'Tokyo', 'Ark Hills', 1, '107-0052'),
+(20, 'Narisawa', 5, 'Japan', 'Tokyo', 'Minami Aoyama', 2, '107-0062'),
+(21, 'Gaggan', 5, 'Thailand', 'Bangkok', 'Soi Lang Suan', 68, '10330'),
+(22, 'Nahm', 4, 'Thailand', 'Bangkok', 'Metropolitan Hotel', 27, '10500'),
+(23, 'Attica', 5, 'Australia', 'Melbourne', 'Glen Eira Road', 74, '3182'),
+(24, 'Quay', 5, 'Australia', 'Sydney', 'Upper Level', 1, '2000'),
+(25, 'Central', 5, 'Peru', 'Lima', 'Calle Santa Isabel', 210, '15074');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `review`
+--
+
+CREATE TABLE `review` (
+  `review_ID` int(11) NOT NULL,
+  `package_ID` int(11) NOT NULL,
+  `traveler_ID` int(11) NOT NULL,
+  `rating_score` int(11) NOT NULL,
+  `description` text NOT NULL,
+  `review_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `review`
+--
+
+INSERT INTO `review` (`review_ID`, `package_ID`, `traveler_ID`, `rating_score`, `description`, `review_date`) VALUES
+(2, 2, 1, 5, 'Lovely Trip', '2026-05-20'),
+(3, 3, 1, 3, 'Lovely Trip', '2026-05-20'),
+(4, 29, 1, 1, 'Horrible', '2026-05-24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `solo_booking`
+--
+
+CREATE TABLE `solo_booking` (
+  `solo_booking_ID` int(11) NOT NULL,
+  `package_ID` int(11) NOT NULL,
+  `agency_ID` int(11) NOT NULL,
+  `traveler_ID` int(11) NOT NULL,
+  `destination` varchar(255) DEFAULT NULL,
+  `status` varchar(50) DEFAULT 'Pending',
+  `booking_date` date DEFAULT curdate()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `solo_booking`
+--
+
+INSERT INTO `solo_booking` (`solo_booking_ID`, `package_ID`, `agency_ID`, `traveler_ID`, `destination`, `status`, `booking_date`) VALUES
+(3, 37, 1, 1, 'Spiderman\'s Journey', 'Pending', '2026-05-24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `traveller`
+--
+
+CREATE TABLE `traveller` (
+  `traveler_ID` int(11) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `birth_date` date DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `street` varchar(100) DEFAULT NULL,
+  `street_number` int(11) DEFAULT NULL,
+  `postal_code` char(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `traveller`
+--
+
+INSERT INTO `traveller` (`traveler_ID`, `first_name`, `last_name`, `birth_date`, `city`, `street`, `street_number`, `postal_code`) VALUES
+(1, 'John', 'Doe', '1995-04-12', 'Pretoria', 'Lynnwood Rd', 10, '0081'),
+(2, 'Jane', 'Smith', '1988-11-23', 'Johannesburg', 'Sandton Dr', 45, '2196'),
+(3, 'Michael', 'Johnson', '2001-02-15', 'Cape Town', 'Long St', 120, '8001'),
+(4, 'Emily', 'Davis', '1990-07-08', 'Durban', 'Marine Pde', 88, '4001'),
+(5, 'David', 'Wilson', '1985-09-30', 'Pretoria', 'Burnett St', 55, '0028'),
+(6, 'Sarah', 'Johnson', '1990-03-15', 'Cape Town', 'Long Street', 45, '8001'),
+(7, 'Michael', 'Brown', '1988-07-22', 'Johannesburg', 'Sandton Drive', 100, '2196'),
+(8, 'Emma', 'Wilson', '1995-11-08', 'Durban', 'Marine Parade', 22, '4001'),
+(9, 'James', 'Martinez', '1985-01-30', 'Pretoria', 'Church Street', 67, '0002'),
+(10, 'Olivia', 'Anderson', '1992-06-18', 'Cape Town', 'Kloof Street', 34, '8001'),
+(11, 'William', 'Taylor', '1989-09-25', 'Johannesburg', 'Fourth Avenue', 50, '2196'),
+(12, 'Sophia', 'Thomas', '1993-12-12', 'Durban', 'Florida Road', 23, '4001'),
+(13, 'Benjamin', 'Jackson', '1987-04-05', 'Pretoria', 'Bourke Street', 15, '0002'),
+(14, 'Isabella', 'White', '1996-08-20', 'Cape Town', 'Victoria Road', 1, '8005'),
+(15, 'Lucas', 'Harris', '1991-02-14', 'Johannesburg', 'West Street', 88, '2196'),
+(16, 'Mia', 'Martin', '1994-10-03', 'Durban', 'Ormonde Drive', 12, '4051'),
+(17, 'Ethan', 'Thompson', '1986-05-27', 'Pretoria', 'Florence Street', 7, '0181'),
+(18, 'Amelia', 'Garcia', '1997-07-19', 'Cape Town', 'Main Road', 56, '8005'),
+(19, 'Alexander', 'Martinez', '1984-11-11', 'Johannesburg', 'Rivonia Road', 23, '2128'),
+(20, 'Charlotte', 'Robinson', '1993-09-08', 'Durban', 'Umhlanga Rocks Drive', 45, '4319'),
+(21, 'Daniel', 'Clark', '1990-12-01', 'Pretoria', 'Lynnwood Road', 10, '0081'),
+(22, 'Harper', 'Rodriguez', '1995-04-22', 'Cape Town', 'Camps Bay Drive', 8, '8005'),
+(23, 'Matthew', 'Lewis', '1988-08-17', 'Johannesburg', 'Melrose Boulevard', 15, '2196'),
+(24, 'Evelyn', 'Lee', '1996-01-09', 'Durban', 'Berea Road', 34, '4001'),
+(25, 'David', 'Walker', '1992-03-28', 'Pretoria', 'Hamilton Street', 22, '0002');
+
+--
+-- Triggers `traveller`
+--
+DELIMITER $$
+CREATE TRIGGER `after_traveller_insert` AFTER INSERT ON `traveller` FOR EACH ROW BEGIN
+    -- Check if user_account doesn't already exist for this traveller
+    IF NOT EXISTS (SELECT 1 FROM user_account WHERE traveler_ID = NEW.traveler_ID) THEN
+        -- Insert into user_account
+        INSERT INTO user_account (
+            username, 
+            password, 
+            email, 
+            role, 
+            traveler_ID
+        ) VALUES (
+            CONCAT('traveller_', NEW.traveler_ID),  -- auto-generate username
+            '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja',  -- default password hash
+            CONCAT('traveller', NEW.traveler_ID, '@tripistry.com'),  -- auto-generate email
+            'traveller',
+            NEW.traveler_ID
+        );
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `traveller_phone`
+--
+
+CREATE TABLE `traveller_phone` (
+  `traveler_ID` int(11) NOT NULL,
+  `phone_number` char(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `traveller_phone`
+--
+
+INSERT INTO `traveller_phone` (`traveler_ID`, `phone_number`) VALUES
+(1, '0821112222'),
+(1, '0831112222'),
+(2, '0713334444'),
+(3, '0605556666'),
+(4, '0847778888');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `travel_package`
+--
+
+CREATE TABLE `travel_package` (
+  `package_ID` int(11) NOT NULL,
+  `package_name` varchar(100) DEFAULT NULL,
+  `agency_ID` int(11) DEFAULT NULL,
+  `flight_ID` int(11) DEFAULT NULL,
+  `accomodation_ID` int(11) DEFAULT NULL,
+  `total_cost_price` int(11) DEFAULT NULL,
+  `duration` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `travel_package`
+--
+
+INSERT INTO `travel_package` (`package_ID`, `package_name`, `agency_ID`, `flight_ID`, `accomodation_ID`, `total_cost_price`, `duration`) VALUES
+(2, 'Japan Escapes', 2, 2, 19, 40000, '2026-11-15'),
+(3, 'Cape Town Tours', 3, 3, 3, 15000, '2026-12-05'),
+(5, 'Durban Getaways', 4, 5, 5, 8000, '2026-08-10'),
+(7, 'France Luxury Tour', 1, 14, 16, 200000, '2026-05-30'),
+(8, 'Japan Explorer', 1, 2, 2, 90000, '2026-05-23'),
+(9, 'Safari Adventure', 2, 12, 12, 25000, '2026-07-15'),
+(10, 'Winelands Experience', 3, 3, 4, 18000, '2026-09-20'),
+(11, 'Garden Route Tour', 4, 5, 5, 12000, '2026-10-10'),
+(12, 'Kruger National Park', 1, 3, 14, 35000, '2026-11-05'),
+(13, 'Victoria Falls', 2, 4, 4, 45000, '2026-12-01'),
+(14, 'Cape Winelands', 3, 3, 8, 22000, '2027-01-15'),
+(15, 'Drakensberg Hiking', 4, 5, 12, 9500, '2027-02-20'),
+(16, 'Sun City Resort', 1, 5, 14, 28000, '2027-03-10'),
+(17, 'Madagascar Escape', 2, 15, 25, 55000, '2027-04-05'),
+(18, 'Mauritius Paradise', 3, 4, 3, 65000, '2027-05-15'),
+(19, 'Zanzibar Beach', 4, 5, 4, 48000, '2027-06-20'),
+(20, 'Namibia Desert', 1, 2, 1, 38000, '2027-07-10'),
+(21, 'Botswana Safari', 2, 3, 2, 52000, '2027-08-05'),
+(22, 'Mozambique Coast', 3, 4, 5, 32000, '2027-09-15'),
+(23, 'Lesotho Highlands', 4, 5, 3, 15000, '2027-10-20'),
+(24, 'Swaziland Cultural', 1, 1, 4, 12500, '2027-11-10'),
+(25, 'Rome Italy Tour', 2, 10, 29, 75000, '2027-12-05'),
+(26, 'Paris France', 3, 14, 16, 85000, '2028-01-15'),
+(27, 'London UK', 4, 10, 25, 78000, '2028-02-20'),
+(28, 'New York USA', 1, 4, 4, 95000, '2028-03-10'),
+(29, 'Tokyo Japan', 2, 2, 19, 110000, '2028-04-05'),
+(30, 'Bali Indonesia', 3, 2, 1, 58000, '2028-05-15'),
+(31, 'Thailand Adventure', 4, 17, 2, 42000, '2028-06-20'),
+(32, 'Australia Dream', 1, 18, 28, 125000, '2028-07-10'),
+(33, 'New Zealand', 2, 5, 4, 118000, '2028-08-05'),
+(34, 'Brazil Carnival', 3, 1, 5, 68000, '2028-09-15'),
+(35, 'Peru Machu Picchu', 4, 20, 30, 72000, '2028-10-20'),
+(36, 'Snowy Escape', 1, 2, 2, 50000, '2026-05-20'),
+(37, 'Spiderman\'s Journey', 1, 11, 22, 100000, '2026-05-31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_account`
+--
+
+CREATE TABLE `user_account` (
+  `account_ID` int(11) NOT NULL,
+  `traveler_ID` int(11) DEFAULT NULL,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `role` enum('traveller','agency') NOT NULL DEFAULT 'traveller',
+  `agency_ID` int(11) DEFAULT NULL,
+  `agency_name` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `user_account`
+--
+
+INSERT INTO `user_account` (`account_ID`, `traveler_ID`, `username`, `password`, `email`, `role`, `agency_ID`, `agency_name`) VALUES
+(1, 1, 'johndoe95', '$2y$10$F0aaIAKxK.bgpX7m6hwyFORmWy.BeKnRo0NGENKRivz7w5OA6j4Ja', 'john@example.com', 'traveller', NULL, NULL),
+(2, 2, 'janesmith', '$2y$10$F0aaIAKxK.bgpX7m6hwyFORmWy.BeKnRo0NGENKRivz7w5OA6j4Ja', 'jane@example.com', 'traveller', NULL, NULL),
+(3, 3, 'mike_j', '$2y$10$F0aaIAKxK.bgpX7m6hwyFORmWy.BeKnRo0NGENKRivz7w5OA6j4Ja', 'mike@example.com', 'traveller', NULL, NULL),
+(4, 4, 'emily_travels', '$2y$10$F0aaIAKxK.bgpX7m6hwyFORmWy.BeKnRo0NGENKRivz7w5OA6j4Ja', 'emily@example.com', 'traveller', NULL, NULL),
+(5, 5, 'dwilson85', '$2y$10$F0aaIAKxK.bgpX7m6hwyFORmWy.BeKnRo0NGENKRivz7w5OA6j4Ja', 'david@example.com', 'traveller', NULL, NULL),
+(6, NULL, 'hatfield_travel', '$2y$10$F0aaIAKxK.bgpX7m6hwyFORmWy.BeKnRo0NGENKRivz7w5OA6j4Ja', 'hatfield@tripistry.com', 'agency', 1, 'Hatfield Travel'),
+(7, NULL, 'joburg_escapes', '$2y$10$F0aaIAKxK.bgpX7m6hwyFORmWy.BeKnRo0NGENKRivz7w5OA6j4Ja', 'joburg@tripistry.com', 'agency', 2, 'Joburg Escapes'),
+(8, NULL, 'capetown_tours', '$2y$10$F0aaIAKxK.bgpX7m6hwyFORmWy.BeKnRo0NGENKRivz7w5OA6j4Ja', 'capetown@tripistry.com', 'agency', 3, 'Cape Town Tours'),
+(9, NULL, 'durban_getaways', '$2y$10$F0aaIAKxK.bgpX7m6hwyFORmWy.BeKnRo0NGENKRivz7w5OA6j4Ja', 'durban@tripistry.com', 'agency', 4, 'Durban Getaways'),
+(10, NULL, 'brooklyn_travel', '$2y$10$F0aaIAKxK.bgpX7m6hwyFORmWy.BeKnRo0NGENKRivz7w5OA6j4Ja', 'brooklyn@tripistry.com', 'agency', 5, 'Brooklyn Travel'),
+(16, NULL, 'global_tours', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'globaltours@tripistry.com', 'agency', 6, 'Global Tours'),
+(17, NULL, 'world_explorer', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'worldexplorer@tripistry.com', 'agency', 7, 'World Explorer'),
+(18, NULL, 'dream_vacations', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'dreamvacations@tripistry.com', 'agency', 8, 'Dream Vacations'),
+(19, NULL, 'epic_journeys', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'epicjourneys@tripistry.com', 'agency', 9, 'Epic Journeys'),
+(20, NULL, 'safari_specialist', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'safarispecialist@tripistry.com', 'agency', 10, 'Safari Specialist'),
+(21, NULL, 'garden_route_travel', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'gardenroutetravel@tripistry.com', 'agency', 11, 'Garden Route Travel'),
+(22, NULL, 'winelands_tours', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'winelandstours@tripistry.com', 'agency', 12, 'Winelands Tours'),
+(23, NULL, 'coastal_getaways', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'coastalgetaways@tripistry.com', 'agency', 13, 'Coastal Getaways'),
+(24, NULL, 'mountain_escapes', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'mountainescapes@tripistry.com', 'agency', 14, 'Mountain Escapes'),
+(25, NULL, 'desert_adventures', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'desertadventures@tripistry.com', 'agency', 15, 'Desert Adventures'),
+(26, NULL, 'cape_point_travel', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'capepointtravel@tripistry.com', 'agency', 16, 'Cape Point Travel'),
+(27, NULL, 'jozi_adventures', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'joziadventures@tripistry.com', 'agency', 17, 'Jozi Adventures'),
+(28, NULL, 'durban_discovery', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'durbandiscovery@tripistry.com', 'agency', 18, 'Durban Discovery'),
+(29, NULL, 'pretoria_premier', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'pretoriapremier@tripistry.com', 'agency', 19, 'Pretoria Premier'),
+(30, NULL, 'sun_city_resort', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'suncityresort@tripistry.com', 'agency', 20, 'Sun City Resort'),
+(31, NULL, 'luxury_escapes', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'luxuryescapes@tripistry.com', 'agency', 21, 'Luxury Escapes'),
+(32, NULL, 'budget_travel_sa', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'budgettravelsa@tripistry.com', 'agency', 22, 'Budget Travel SA'),
+(33, NULL, 'family_holidays', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'familyholidays@tripistry.com', 'agency', 23, 'Family Holidays'),
+(34, NULL, 'honeymoon_specialists', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'honeymoonspecialists@tripistry.com', 'agency', 24, 'Honeymoon Specialists'),
+(35, NULL, 'backpacker_connect', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'backpackerconnect@tripistry.com', 'agency', 25, 'Backpacker Connect'),
+(36, NULL, 'eco_travel', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'ecotravel@tripistry.com', 'agency', 26, 'Eco Travel'),
+(37, NULL, 'cultural_tours', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'culturaltours@tripistry.com', 'agency', 27, 'Cultural Tours'),
+(38, NULL, 'wildlife_adventures', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'wildlifeadventures@tripistry.com', 'agency', 28, 'Wildlife Adventures'),
+(39, NULL, 'history_heritage', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'historyheritage@tripistry.com', 'agency', 29, 'History Heritage'),
+(40, NULL, 'photography_safaris', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'photographysafaris@tripistry.com', 'agency', 30, 'Photography Safaris'),
+(47, 6, 'traveller_6', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller6@tripistry.com', 'traveller', NULL, NULL),
+(48, 7, 'traveller_7', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller7@tripistry.com', 'traveller', NULL, NULL),
+(49, 8, 'traveller_8', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller8@tripistry.com', 'traveller', NULL, NULL),
+(50, 9, 'traveller_9', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller9@tripistry.com', 'traveller', NULL, NULL),
+(51, 10, 'traveller_10', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller10@tripistry.com', 'traveller', NULL, NULL),
+(52, 11, 'traveller_11', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller11@tripistry.com', 'traveller', NULL, NULL),
+(53, 12, 'traveller_12', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller12@tripistry.com', 'traveller', NULL, NULL),
+(54, 13, 'traveller_13', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller13@tripistry.com', 'traveller', NULL, NULL),
+(55, 14, 'traveller_14', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller14@tripistry.com', 'traveller', NULL, NULL),
+(56, 15, 'traveller_15', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller15@tripistry.com', 'traveller', NULL, NULL),
+(57, 16, 'traveller_16', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller16@tripistry.com', 'traveller', NULL, NULL),
+(58, 17, 'traveller_17', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller17@tripistry.com', 'traveller', NULL, NULL),
+(59, 18, 'traveller_18', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller18@tripistry.com', 'traveller', NULL, NULL),
+(60, 19, 'traveller_19', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller19@tripistry.com', 'traveller', NULL, NULL),
+(61, 20, 'traveller_20', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller20@tripistry.com', 'traveller', NULL, NULL),
+(62, 21, 'traveller_21', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller21@tripistry.com', 'traveller', NULL, NULL),
+(63, 22, 'traveller_22', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller22@tripistry.com', 'traveller', NULL, NULL),
+(64, 23, 'traveller_23', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller23@tripistry.com', 'traveller', NULL, NULL),
+(65, 24, 'traveller_24', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller24@tripistry.com', 'traveller', NULL, NULL),
+(66, 25, 'traveller_25', '$2y$10$F0aaIAKxK.bgpX7m6hwyFOrMvWy.BeKnRo0NGENkRzv7w5OA6j4Ja', 'traveller25@tripistry.com', 'traveller', NULL, NULL);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `accomodation`
+--
+ALTER TABLE `accomodation`
+  ADD PRIMARY KEY (`accomodation_ID`);
+
+--
+-- Indexes for table `agency`
+--
+ALTER TABLE `agency`
+  ADD PRIMARY KEY (`agency_ID`);
+
+--
+-- Indexes for table `agency_staff`
+--
+ALTER TABLE `agency_staff`
+  ADD PRIMARY KEY (`agency_ID`,`staff_ID`);
+
+--
+-- Indexes for table `agency_staff_phone`
+--
+ALTER TABLE `agency_staff_phone`
+  ADD PRIMARY KEY (`agency_ID`,`staff_ID`,`phone_number`);
+
+--
+-- Indexes for table `airbnb`
+--
+ALTER TABLE `airbnb`
+  ADD PRIMARY KEY (`accomodation_ID`);
+
+--
+-- Indexes for table `attraction`
+--
+ALTER TABLE `attraction`
+  ADD PRIMARY KEY (`attraction_ID`);
+
+--
+-- Indexes for table `attraction_times`
+--
+ALTER TABLE `attraction_times`
+  ADD PRIMARY KEY (`attraction_ID`,`opening_times`,`closing_times`);
+
+--
+-- Indexes for table `flight`
+--
+ALTER TABLE `flight`
+  ADD PRIMARY KEY (`flight_ID`);
+
+--
+-- Indexes for table `group_booking`
+--
+ALTER TABLE `group_booking`
+  ADD PRIMARY KEY (`group_booking_ID`),
+  ADD KEY `package_ID` (`package_ID`),
+  ADD KEY `agency_ID` (`agency_ID`),
+  ADD KEY `traveler_ID` (`traveler_ID`);
+
+--
+-- Indexes for table `hotel`
+--
+ALTER TABLE `hotel`
+  ADD PRIMARY KEY (`accomodation_ID`);
+
+--
+-- Indexes for table `package_attraction`
+--
+ALTER TABLE `package_attraction`
+  ADD PRIMARY KEY (`package_ID`,`attraction_ID`),
+  ADD UNIQUE KEY `unique_package_attraction` (`package_ID`,`attraction_ID`),
+  ADD KEY `attraction_ID` (`attraction_ID`);
+
+--
+-- Indexes for table `package_restaurant`
+--
+ALTER TABLE `package_restaurant`
+  ADD PRIMARY KEY (`package_ID`,`restaurant_ID`),
+  ADD KEY `restaurant_ID` (`restaurant_ID`);
+
+--
+-- Indexes for table `rating`
+--
+ALTER TABLE `rating`
+  ADD PRIMARY KEY (`agency_ID`,`traveler_ID`,`rating_ID`),
+  ADD KEY `traveler_ID` (`traveler_ID`);
+
+--
+-- Indexes for table `restaurant`
+--
+ALTER TABLE `restaurant`
+  ADD PRIMARY KEY (`restaurant_ID`);
+
+--
+-- Indexes for table `review`
+--
+ALTER TABLE `review`
+  ADD PRIMARY KEY (`review_ID`),
+  ADD UNIQUE KEY `unique_review` (`package_ID`,`traveler_ID`),
+  ADD KEY `traveler_ID` (`traveler_ID`);
+
+--
+-- Indexes for table `solo_booking`
+--
+ALTER TABLE `solo_booking`
+  ADD PRIMARY KEY (`solo_booking_ID`),
+  ADD KEY `package_ID` (`package_ID`),
+  ADD KEY `agency_ID` (`agency_ID`),
+  ADD KEY `traveler_ID` (`traveler_ID`);
+
+--
+-- Indexes for table `traveller`
+--
+ALTER TABLE `traveller`
+  ADD PRIMARY KEY (`traveler_ID`);
+
+--
+-- Indexes for table `traveller_phone`
+--
+ALTER TABLE `traveller_phone`
+  ADD PRIMARY KEY (`traveler_ID`,`phone_number`);
+
+--
+-- Indexes for table `travel_package`
+--
+ALTER TABLE `travel_package`
+  ADD PRIMARY KEY (`package_ID`),
+  ADD KEY `agency_ID` (`agency_ID`),
+  ADD KEY `flight_ID` (`flight_ID`),
+  ADD KEY `accomodation_ID` (`accomodation_ID`);
+
+--
+-- Indexes for table `user_account`
+--
+ALTER TABLE `user_account`
+  ADD PRIMARY KEY (`account_ID`),
+  ADD UNIQUE KEY `traveler_ID` (`traveler_ID`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `group_booking`
+--
+ALTER TABLE `group_booking`
+  MODIFY `group_booking_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `review`
+--
+ALTER TABLE `review`
+  MODIFY `review_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `solo_booking`
+--
+ALTER TABLE `solo_booking`
+  MODIFY `solo_booking_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `travel_package`
+--
+ALTER TABLE `travel_package`
+  MODIFY `package_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
+--
+-- AUTO_INCREMENT for table `user_account`
+--
+ALTER TABLE `user_account`
+  MODIFY `account_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `agency_staff`
+--
+ALTER TABLE `agency_staff`
+  ADD CONSTRAINT `1` FOREIGN KEY (`agency_ID`) REFERENCES `agency` (`agency_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `agency_staff_phone`
+--
+ALTER TABLE `agency_staff_phone`
+  ADD CONSTRAINT `1` FOREIGN KEY (`agency_ID`,`staff_ID`) REFERENCES `agency_staff` (`agency_ID`, `staff_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `airbnb`
+--
+ALTER TABLE `airbnb`
+  ADD CONSTRAINT `1` FOREIGN KEY (`accomodation_ID`) REFERENCES `accomodation` (`accomodation_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `attraction_times`
+--
+ALTER TABLE `attraction_times`
+  ADD CONSTRAINT `1` FOREIGN KEY (`attraction_ID`) REFERENCES `attraction` (`attraction_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `group_booking`
+--
+ALTER TABLE `group_booking`
+  ADD CONSTRAINT `1` FOREIGN KEY (`package_ID`) REFERENCES `travel_package` (`package_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `2` FOREIGN KEY (`agency_ID`) REFERENCES `agency` (`agency_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `3` FOREIGN KEY (`traveler_ID`) REFERENCES `traveller` (`traveler_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `hotel`
+--
+ALTER TABLE `hotel`
+  ADD CONSTRAINT `1` FOREIGN KEY (`accomodation_ID`) REFERENCES `accomodation` (`accomodation_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `package_attraction`
+--
+ALTER TABLE `package_attraction`
+  ADD CONSTRAINT `1` FOREIGN KEY (`package_ID`) REFERENCES `travel_package` (`package_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `2` FOREIGN KEY (`attraction_ID`) REFERENCES `attraction` (`attraction_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `package_restaurant`
+--
+ALTER TABLE `package_restaurant`
+  ADD CONSTRAINT `1` FOREIGN KEY (`package_ID`) REFERENCES `travel_package` (`package_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `2` FOREIGN KEY (`restaurant_ID`) REFERENCES `restaurant` (`restaurant_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `rating`
+--
+ALTER TABLE `rating`
+  ADD CONSTRAINT `1` FOREIGN KEY (`agency_ID`) REFERENCES `agency` (`agency_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `2` FOREIGN KEY (`traveler_ID`) REFERENCES `traveller` (`traveler_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `review`
+--
+ALTER TABLE `review`
+  ADD CONSTRAINT `1` FOREIGN KEY (`package_ID`) REFERENCES `travel_package` (`package_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `2` FOREIGN KEY (`traveler_ID`) REFERENCES `traveller` (`traveler_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `solo_booking`
+--
+ALTER TABLE `solo_booking`
+  ADD CONSTRAINT `1` FOREIGN KEY (`package_ID`) REFERENCES `travel_package` (`package_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `2` FOREIGN KEY (`agency_ID`) REFERENCES `agency` (`agency_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `3` FOREIGN KEY (`traveler_ID`) REFERENCES `traveller` (`traveler_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `traveller_phone`
+--
+ALTER TABLE `traveller_phone`
+  ADD CONSTRAINT `1` FOREIGN KEY (`traveler_ID`) REFERENCES `traveller` (`traveler_ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `travel_package`
+--
+ALTER TABLE `travel_package`
+  ADD CONSTRAINT `1` FOREIGN KEY (`agency_ID`) REFERENCES `agency` (`agency_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `2` FOREIGN KEY (`flight_ID`) REFERENCES `flight` (`flight_ID`) ON DELETE SET NULL,
+  ADD CONSTRAINT `3` FOREIGN KEY (`accomodation_ID`) REFERENCES `accomodation` (`accomodation_ID`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `user_account`
+--
+ALTER TABLE `user_account`
+  ADD CONSTRAINT `1` FOREIGN KEY (`traveler_ID`) REFERENCES `traveller` (`traveler_ID`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
