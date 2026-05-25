@@ -17,15 +17,17 @@ SELECT
     tp.package_name,
     tp.agency_ID,
     tp.total_cost_price,
-    tp.duration,
+    tp.start_date,
     f.country AS flight_country,
     f.flight_duration,
+    ag.agency_name,
     ag.city AS agency_city,
     ag.phone_number,
     ac.country AS hotel_country,
     ac.city AS hotel_city,
     ac.cost_per_night,
-    ac.duration AS stay_duration
+    ac.duration AS stay_duration,
+    ac.name AS hotel_name
 FROM travel_package tp
 LEFT JOIN flight f ON tp.flight_ID = f.flight_ID
 LEFT JOIN agency ag ON tp.agency_ID = ag.agency_ID
@@ -69,6 +71,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_package'])) {
         }
     }
 }
+
+// Handle quick review submission
+$review_error = '';
+$review_success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
+    $package_id = (int)$_POST['package_id'];
+    $rating = (int)$_POST['rating'];
+    $description = trim($_POST['description']);
+    
+    if ($rating < 1 || $rating > 5) {
+        $review_error = "Rating must be between 1 and 5 stars.";
+    } elseif (empty($description)) {
+        $review_error = "Please write a review.";
+    } else {
+        $check_stmt = $pdo->prepare("SELECT * FROM review WHERE package_ID = ? AND traveler_ID = ?");
+        $check_stmt->execute([$package_id, $traveler_id]);
+        
+        if ($check_stmt->fetch()) {
+            $review_error = "You have already reviewed this package!";
+        } else {
+            $insert_stmt = $pdo->prepare("INSERT INTO review (package_ID, traveler_ID, rating_score, description, review_date) VALUES (?, ?, ?, ?, CURDATE())");
+            if ($insert_stmt->execute([$package_id, $traveler_id, $rating, $description])) {
+                $review_success = "Thank you for your review!";
+                // Refresh to show the new review
+                header("Location: package_view.php?id=" . $package_id);
+                exit;
+            } else {
+                $review_error = "Failed to save review.";
+            }
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -80,7 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_package'])) {
     <link rel="stylesheet" href="/tripistry/css/browse.css">
     <link rel="stylesheet" href="/tripistry/css/package_view.css">
     <style>
-        /* Attractions and Restaurants Grid Styles */
         .attractions-grid, .restaurants-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -131,6 +165,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_package'])) {
             color: #d88d14;
             letter-spacing: 2px;
         }
+        
+        .quick-review-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(216,141,20,0.2);
+        }
+        
+        .review-stars {
+            display: flex;
+            gap: 10px;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        
+        .review-stars span {
+            color: #555;
+            transition: color 0.2s;
+        }
+        
+        .review-stars span.active, .review-stars span:hover {
+            color: #d88d14;
+        }
+        
+        .alert-success {
+            background: rgba(46,204,113,0.2);
+            color: #2ecc71;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid #2ecc71;
+        }
+        
+        .alert-error {
+            background: rgba(231,76,60,0.2);
+            color: #e74c3c;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid #e74c3c;
+        }
     </style>
 </head>
 <body>
@@ -140,6 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_package'])) {
   <div class="nav-links">
     <a href="/tripistry/traveller/dashboard.php">Dashboard</a>
     <a href="/tripistry/traveller/browse.php">Packages</a>
+    <a href="/tripistry/traveller/compare.php">Compare</a>
     <a href="/tripistry/traveller/group_bookings.php">Group Travel</a>
     <a href="/tripistry/traveller/flights.php">Flights</a>
     <a href="/tripistry/traveller/accommodation.php">Accommodation</a>
@@ -154,15 +229,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_package'])) {
     <a href="browse.php" class="back-btn">← Back to Packages Gallery</a>
     
     <?php if ($booking_success): ?>
-        <div style="background: rgba(46,204,113,0.2); color: #2ecc71; padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 3px solid #2ecc71;">
-            ✅ <?= htmlspecialchars($booking_success) ?>
-        </div>
+        <div class="alert-success">✅ <?= htmlspecialchars($booking_success) ?></div>
     <?php endif; ?>
     
     <?php if ($booking_error): ?>
-        <div style="background: rgba(231,76,60,0.2); color: #e74c3c; padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 3px solid #e74c3c;">
-            ❌ <?= htmlspecialchars($booking_error) ?>
-        </div>
+        <div class="alert-error">❌ <?= htmlspecialchars($booking_error) ?></div>
+    <?php endif; ?>
+    
+    <?php if ($review_success): ?>
+        <div class="alert-success">✅ <?= htmlspecialchars($review_success) ?></div>
+    <?php endif; ?>
+    
+    <?php if ($review_error): ?>
+        <div class="alert-error">❌ <?= htmlspecialchars($review_error) ?></div>
     <?php endif; ?>
     
     <h1><?= htmlspecialchars($package['package_name'] ?? $package['flight_country']) ?> Tour Itinerary</h1>
@@ -171,11 +250,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_package'])) {
         <div class="info-box">
             <h2>Package Overview</h2>
             <p><strong>Package Name:</strong> <?= htmlspecialchars($package['package_name'] ?? '—') ?></p>
-            <p><strong>Total Duration:</strong> <?= htmlspecialchars($package['duration']) ?> Days</p>
+            <p><strong>Start Date:</strong> <?= htmlspecialchars($package['start_date']) ?></p>
             <p><strong>Flight Duration:</strong> <?= htmlspecialchars($package['flight_duration']) ?> Hours</p>
             <p><strong>Flight Destination:</strong> <?= htmlspecialchars($package['flight_country'] ?? '—') ?></p>
-            <p><strong>Accommodation:</strong> <?= htmlspecialchars($package['hotel_city']) ?>, <?= htmlspecialchars($package['hotel_country']) ?> (<?= htmlspecialchars($package['stay_duration']) ?> Nights)</p>
-            <p><strong>Arranged By Agency Location:</strong> <?= htmlspecialchars($package['agency_city']) ?> (Contact: <?= htmlspecialchars($package['phone_number']) ?>)</p>
+            <p><strong>Accommodation:</strong> <?= htmlspecialchars($package['hotel_name'] ?? 'Hotel') ?> in <?= htmlspecialchars($package['hotel_city']) ?>, <?= htmlspecialchars($package['hotel_country']) ?> (<?= htmlspecialchars($package['stay_duration']) ?> Nights)</p>
+            <p><strong>Arranged By Agency:</strong> <?= htmlspecialchars($package['agency_name'] ?? $package['agency_city']) ?> (Contact: <?= htmlspecialchars($package['phone_number']) ?>)</p>
         </div>
         
         <div class="price-card">
@@ -197,7 +276,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_package'])) {
         $attractionStmt->execute([$id]);
         $attractions = $attractionStmt->fetchAll();
 
-        
         if (empty($attractions)) {
             echo "<p style='color: rgba(255,255,255,0.5);'>No attractions mapped to this package itinerary yet.</p>";
         } else {
@@ -257,7 +335,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_package'])) {
     <div class="sub-section-title">Traveller Reviews</div>
     <div class="components-flex-grid">
         <?php
-        // Get reviews for this package with traveler names
         $reviewSQL = "SELECT r.*, t.first_name, t.last_name 
                       FROM review r 
                       LEFT JOIN traveller t ON r.traveler_ID = t.traveler_ID
@@ -317,13 +394,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_package'])) {
         </div>
     </div>
 
-    <!-- REVIEW SECTION -->
-    <div class="review-section">
-        <a href="/tripistry/traveller/reviews.php?package_id=<?= $id ?>" class="btn-review">
-            ✍️ Write a Review for This Package
-        </a>
+    <!-- QUICK REVIEW SECTION -->
+    <div class="quick-review-section">
+        <h3 style="color: #d88d14; margin-bottom: 20px;">✍️ Write a Review</h3>
+        
+        <?php
+        // Check if user has already reviewed this package
+        $check_review_sql = "SELECT * FROM review WHERE package_ID = ? AND traveler_ID = ?";
+        $check_stmt = $pdo->prepare($check_review_sql);
+        $check_stmt->execute([$id, $traveler_id]);
+        $has_reviewed = $check_stmt->fetch();
+        
+        if ($has_reviewed): ?>
+            <p style="color: #2ecc71;">✅ You have already reviewed this package. Thank you for your feedback!</p>
+        <?php else: ?>
+            <form method="POST" action="">
+                <input type="hidden" name="package_id" value="<?= $id ?>">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 10px; color: rgba(255,255,255,0.7);">Your Rating:</label>
+                    <div class="review-stars" id="reviewStars">
+                        <span data-value="1">☆</span>
+                        <span data-value="2">☆</span>
+                        <span data-value="3">☆</span>
+                        <span data-value="4">☆</span>
+                        <span data-value="5">☆</span>
+                    </div>
+                    <input type="hidden" name="rating" id="ratingValue" value="5">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 10px; color: rgba(255,255,255,0.7);">Your Review:</label>
+                    <textarea name="description" rows="4" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(216,141,20,0.3); border-radius: 8px; color: white;" placeholder="Share your experience with this package..."></textarea>
+                </div>
+                <button type="submit" name="submit_review" style="background: linear-gradient(135deg, #d88d14, #fca822); color: #1a0a00; border: none; padding: 10px 25px; border-radius: 50px; cursor: pointer; font-weight: bold;">Submit Review</button>
+            </form>
+        <?php endif; ?>
     </div>
 </div>
+
+<script>
+// Star rating for quick review
+var stars = document.querySelectorAll('#reviewStars span');
+var ratingInput = document.getElementById('ratingValue');
+
+stars.forEach(function(star, index) {
+    star.addEventListener('click', function() {
+        var value = parseInt(this.getAttribute('data-value'));
+        ratingInput.value = value;
+        stars.forEach(function(s, i) {
+            if (i < value) {
+                s.innerHTML = '★';
+                s.style.color = '#d88d14';
+            } else {
+                s.innerHTML = '☆';
+                s.style.color = '#555';
+            }
+        });
+    });
+});
+
+// Set initial stars to 5
+var initialRating = parseInt(ratingInput.value);
+stars.forEach(function(s, i) {
+    if (i < initialRating) {
+        s.innerHTML = '★';
+        s.style.color = '#d88d14';
+    }
+});
+</script>
 
 </body>
 </html>
